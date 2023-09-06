@@ -35,5 +35,10 @@ export default async function callApiAndParseWithTimeout<
       ? Promise.race([apiPromise, rejectAfterTimeout<Response>(timeout)])
       : apiPromise;
 
-  return parseResponse(racedPromise, parseMethod);
+  const result =  parseResponse(racedPromise, parseMethod);
+
+  // TODO: remove after debugging
+  console.log('callApiAndParseWithTimeout -> rest', rest);
+  console.log('callApiAndParseWithTimeout -> result', result);
+  return result;
 }

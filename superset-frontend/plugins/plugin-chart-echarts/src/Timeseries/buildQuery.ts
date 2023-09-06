@@ -78,7 +78,7 @@ export default function buildQuery(formData: QueryFormData) {
       ...ensureIsArray(groupby),
     ];
 
-    return [
+    const result =  [
       {
         ...baseQueryObject,
         metrics: [...(baseQueryObject.metrics || []), ...extra_metrics],
@@ -108,5 +108,10 @@ export default function buildQuery(formData: QueryFormData) {
         ],
       },
     ];
+
+    // TODO :: remove this hack
+    console.info('buildQuery', result);
+
+    return result;
   });
 }

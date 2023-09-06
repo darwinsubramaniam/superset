@@ -60,6 +60,8 @@ export const DEFAULT_FORM_DATA: EchartsTimeseriesFormData = {
   truncateYAxis: false,
   yAxisBounds: [null, null],
   zoomable: false,
+  // TODO : part of POC - DARWIN
+  brushEnabled: false,
   richTooltip: true,
   xAxisLabelRotation: 0,
   groupby: [],

@@ -62,6 +62,10 @@ export default class ChartClient {
   ) {
     const { client = SupersetClient } = config;
     this.client = client;
+
+    //TODO: Remove this
+    console.debug('ChartClient initialized with config:', config);
+    
   }
 
   loadFormData(
@@ -99,6 +103,12 @@ export default class ChartClient {
     formData: QueryFormData,
     options?: Partial<RequestConfig>,
   ): Promise<QueryData[]> {
+    
+    console.info(`Caller ${this}`);
+    console.info(`Caller ${this.loadQueryData.name}`);
+    console.info(`Performing query with formData: ${JSON.stringify(formData)}`);
+    console.info(`Performing query with options: ${JSON.stringify(options)}`);
+
     const { viz_type: visType } = formData;
     const metaDataRegistry = getChartMetadataRegistry();
     const buildQueryRegistry = getChartBuildQueryRegistry();
@@ -178,6 +188,7 @@ export default class ChartClient {
   }
 
   loadChartData(input: SliceIdAndOrFormData): Promise<ChartData> {
+    console.log(`Caller :: ${this.loadChartData.name}`)
     return this.loadFormData(input).then(
       (
         formData: QueryFormData & {
@@ -189,12 +200,19 @@ export default class ChartClient {
           this.loadAnnotations(formData.annotation_layers),
           this.loadDatasource(formData.datasource),
           this.loadQueryData(formData),
-        ]).then(([annotationData, datasource, queriesData]) => ({
+        ]).then(([annotationData, datasource, queriesData]) => {
+          
+          console.log(`Caller :: ${this.loadChartData.name}`);
+          console.info(annotationData);
+          console.info(datasource);
+          console.info(queriesData);
+
+          return ({
           annotationData,
           datasource,
           formData,
           queriesData,
-        })),
+        })}),
     );
   }
 }

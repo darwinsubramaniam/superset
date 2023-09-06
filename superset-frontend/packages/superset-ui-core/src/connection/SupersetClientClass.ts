@@ -198,6 +198,12 @@ export default class SupersetClientClass {
     ignoreUnauthorized = false,
     ...rest
   }: RequestConfig & { parseMethod?: T }) {
+    // TODO: remove 
+    console.info(`Caller function ${this.constructor.name}.${this.request.name}`);
+    console.info(`Caller function ${this.constructor.name}.${this.request.name} -> endpoint`, endpoint);
+    console.info(`Caller function ${this.constructor.name}.${this.request.name} -> host`, host);
+    console.info(`Caller function ${this.constructor.name}.${this.request.name} -> url`, url);
+    console.info(`Caller function ${this.constructor.name}.${this.request.name} -> headers`, headers);
     await this.ensureAuth();
     return callApiAndParseWithTimeout({
       ...rest,

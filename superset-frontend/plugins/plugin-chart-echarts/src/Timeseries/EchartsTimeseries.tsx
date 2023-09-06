@@ -258,6 +258,7 @@ export default function EchartsTimeseries({
 
   let currentSelection:object={};
 
+  /** The refs are the object which hold the instance of the chart -> for any listening event we should use this method. */
   refs.echartRef!.current?.getEchartInstance()?.on('brushselected', (e) => {
     
     currentSelection = e as object;

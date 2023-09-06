@@ -158,7 +158,7 @@ export function useListViewResource<D extends object = any>(
         ...(filterExps.length ? { filters: filterExps } : {}),
       });
 
-      return SupersetClient.get({
+       const result =  SupersetClient.get({
         endpoint: `/api/v1/${resource}/?q=${queryParams}`,
       })
         .then(
@@ -182,6 +182,10 @@ export function useListViewResource<D extends object = any>(
         .finally(() => {
           updateState({ loading: false });
         });
+        // TODO: remove this
+        console.log('fetch performed' , result);
+
+        return result;
     },
     [baseFilters],
   );

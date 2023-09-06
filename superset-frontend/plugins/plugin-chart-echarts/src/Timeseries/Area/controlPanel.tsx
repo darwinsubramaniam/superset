@@ -37,6 +37,7 @@ import {
   richTooltipSection,
   seriesOrderSection,
   percentageThresholdControl,
+  brushControl,
 } from '../../controls';
 import { AreaChartStackControlOptions } from '../../constants';
 
@@ -51,6 +52,7 @@ const {
   truncateYAxis,
   yAxisBounds,
   zoomable,
+  brushEnabled,
   xAxisLabelRotation,
 } = DEFAULT_FORM_DATA;
 const config: ControlPanelConfig = {
@@ -179,6 +181,7 @@ const config: ControlPanelConfig = {
             },
           },
         ],
+        [brushControl],
         ...legendSection,
         [<ControlSubSectionHeader>{t('X Axis')}</ControlSubSectionHeader>],
         [

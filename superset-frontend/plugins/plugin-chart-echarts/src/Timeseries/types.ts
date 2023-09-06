@@ -32,6 +32,7 @@ import {
   BaseTransformedProps,
   ContextMenuTransformedProps,
   CrossFilterTransformedProps,
+  CrossSelectionTransformedProps,
   LegendFormData,
   StackType,
   TitleFormData,
@@ -81,6 +82,7 @@ export type EchartsTimeseriesFormData = QueryFormData & {
   timeGrainSqla?: TimeGranularity;
   yAxisBounds: [number | undefined | null, number | undefined | null];
   zoomable: boolean;
+  brushEnabled: boolean;
   richTooltip: boolean;
   xAxisLabelRotation: number;
   groupby: QueryFormColumn[];
@@ -108,4 +110,5 @@ export type TimeseriesChartTransformedProps =
         type: AxisType;
       };
       onFocusedSeries: (series: string | null) => void;
-    };
+    } &
+    CrossSelectionTransformedProps;

@@ -148,6 +148,17 @@ export type CrossFilterTransformedProps = {
   emitCrossFilters?: boolean;
 };
 
+/** To let the chart know there are data being selected  
+ * This is part of POC for enabling cross selection
+*/
+export type CrossSelectionTransformedProps = {
+  groupby: QueryFormColumn[];
+  labelMap: Record<string, string[]>;
+  onSelectionSelected?: HandlerFunction;
+  selectedValues: Record<number, string>;
+  emitCrossFilters?: boolean;
+}
+
 export type ContextMenuTransformedProps = {
   onContextMenu?: (
     clientX: number,

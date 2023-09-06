@@ -139,6 +139,8 @@ export default function makeApi<
         }
       }
       const typedResult = result as ParsedResponseType<T>;
+      // TODO: remove after debug
+      console.info(typedResult)
       return (
         processResponse ? processResponse(typedResult) : typedResult
       ) as Result;
@@ -150,6 +152,8 @@ export default function makeApi<
   request.method = method;
   request.endpoint = endpoint;
   request.requestType = requestType;
+  // TODO: remove after debug
+  console.info(`[makeApi] ${method} ${endpoint}`)
 
   return request;
 }

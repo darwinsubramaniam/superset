@@ -88,6 +88,10 @@ class ChartDataProvider extends React.PureComponent<
     if (formData !== prevProps.formData || sliceId !== prevProps.sliceId) {
       this.handleFetchData();
     }
+
+    // TODO: remove this
+    console.info('componentDidUpdate', this.context);
+    
   }
 
   private extractSliceIdAndFormData() {
@@ -102,6 +106,8 @@ class ChartDataProvider extends React.PureComponent<
       datasourceRequestOptions,
       queryRequestOptions,
     } = this.props;
+
+    console.info(`[ChartDataProvider] handleFetchData ${this.props}`)
 
     this.setState({ status: 'loading' }, () => {
       try {
@@ -138,6 +144,7 @@ class ChartDataProvider extends React.PureComponent<
   };
 
   private handleReceiveData = (payload?: Payload) => {
+    console.info('handleReceiveData', payload);
     const { onLoaded } = this.props;
     if (onLoaded) onLoaded(payload);
     this.setState({ payload, status: 'loaded' });

@@ -185,6 +185,20 @@ const richTooltipControl: ControlSetItem = {
   },
 };
 
+/** This is part of the Controller which might be used in the Customization to make user select the brush if require
+ * This is still part of the POC
+ */
+export const brushControl: ControlSetItem = {
+  name: 'brush',
+  config: {
+    type: 'CheckboxControl',
+    label: t('Enable Brushing'),
+    renderTrigger: true,
+    default: false,
+    description: t('Enable box or lasso selection of data points'),
+  },
+};
+
 const tooltipTimeFormatControl: ControlSetItem = {
   name: 'tooltipTimeFormat',
   config: {

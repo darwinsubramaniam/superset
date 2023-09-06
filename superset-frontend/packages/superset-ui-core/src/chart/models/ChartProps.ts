@@ -67,6 +67,9 @@ type Hooks = {
   setDataMask?: SetDataMaskHook;
   /** handle tooltip */
   setTooltip?: HandlerFunction;
+  /** handle data selection */
+  // TODO- Added by Darwin:POC
+  onSelectionSelected?: HandlerFunction;
 } & PlainObject;
 
 /**

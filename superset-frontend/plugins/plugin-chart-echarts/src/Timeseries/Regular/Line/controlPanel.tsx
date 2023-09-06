@@ -34,6 +34,7 @@ import {
   TIME_SERIES_DESCRIPTION_TEXT,
 } from '../../constants';
 import {
+  brushControl,
   legendSection,
   richTooltipSection,
   seriesOrderSection,
@@ -167,6 +168,7 @@ const config: ControlPanelConfig = {
             },
           },
         ],
+        [brushControl],
         ...legendSection,
         [<ControlSubSectionHeader>{t('X Axis')}</ControlSubSectionHeader>],
         [
