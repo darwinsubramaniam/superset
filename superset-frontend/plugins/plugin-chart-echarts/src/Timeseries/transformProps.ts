@@ -410,6 +410,9 @@ export default function transformProps(
     setControlValue = () => {},
     onContextMenu,
     onLegendStateChanged,
+    onSelectionSelected = () => {
+      console.log('onSelectionSelected');
+    },
   } = hooks;
 
   const addYAxisLabelOffset = !!yAxisTitle;
@@ -556,8 +559,13 @@ export default function transformProps(
             back: t('restore zoom'),
           },
         },
+        brush: {
+          type: ['rect', 'polygon', 'clear'],
+          brushMode: 'multiple',
+        },
       },
     },
+    brush: {},
     dataZoom: zoomable
       ? [
           {
@@ -589,6 +597,7 @@ export default function transformProps(
     onContextMenu,
     onLegendStateChanged,
     onFocusedSeries,
+    onSelectionSelected,
     xValueFormatter: tooltipFormatter,
     xAxis: {
       label: xAxisLabel,

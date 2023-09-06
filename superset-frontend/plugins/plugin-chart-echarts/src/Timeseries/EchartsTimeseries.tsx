@@ -69,6 +69,7 @@ export default function EchartsTimeseries({
     setExtraControlHeight(updatedHeight);
   }, [formData.showExtraControls]);
 
+
   const getModelInfo = (target: ViewRootGroup, globalModel: GlobalModel) => {
     let el = target;
     let model: ComponentModel | null = null;
@@ -86,6 +87,7 @@ export default function EchartsTimeseries({
 
   const getCrossFilterDataMask = useCallback(
     (value: string) => {
+      console.info('getCrossFilterDataMask', value);
       const selected: string[] = Object.values(selectedValues);
       let values: string[];
       if (selected.includes(value)) {
@@ -163,9 +165,12 @@ export default function EchartsTimeseries({
       onLegendStateChanged?.(payload.selected);
     },
     contextmenu: async eventParams => {
+      console.info('contextmenu + eventParams', eventParams);
       if (onContextMenu) {
         eventParams.event.stop();
         const { data, seriesName } = eventParams;
+        console.info('data', data);
+        console.info('seriesName', seriesName);
         const drillToDetailFilters: BinaryQueryObjectFilterClause[] = [];
         const drillByFilters: BinaryQueryObjectFilterClause[] = [];
         const pointerEvent = eventParams.event.event;
@@ -173,6 +178,8 @@ export default function EchartsTimeseries({
           ...(eventParams.name ? [eventParams.name] : []),
           ...(labelMap[seriesName] ?? []),
         ];
+        /**Adding for debugging */
+        console.info('contextmenu + values', values);
         if (data && xAxis.type === AxisType.time) {
           drillToDetailFilters.push({
             col:
@@ -248,6 +255,24 @@ export default function EchartsTimeseries({
       }
     },
   };
+
+  let currentSelection:object={};
+
+  refs.echartRef!.current?.getEchartInstance()?.on('brushselected', (e) => {
+    
+    currentSelection = e as object;
+  });
+
+  refs.echartRef!.current?.getEchartInstance()?.on('brush', (e) => {
+  });
+
+  refs.echartRef!.current?.getEchartInstance()?.on('brushEnd', (e) => {
+    console.log('brushEnd', e);
+
+    console.log('currentSelection', currentSelection);
+
+    console.log('formData', formData);
+  });
 
   return (
     <>
