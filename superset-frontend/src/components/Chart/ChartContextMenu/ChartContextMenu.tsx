@@ -270,6 +270,15 @@ const ChartContextMenu = (
     [open],
   );
 
+  menuItems.push(
+    <>
+      <Menu.Item>
+        Darwin
+      </Menu.Item>
+      {itemsCount > 1 && <Menu.Divider />}
+    </>,
+  );
+
   return ReactDOM.createPortal(
     <Dropdown
       overlay={

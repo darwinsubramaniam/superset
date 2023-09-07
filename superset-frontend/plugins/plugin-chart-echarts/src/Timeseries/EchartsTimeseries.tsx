@@ -259,17 +259,17 @@ export default function EchartsTimeseries({
   let currentSelection:object={};
 
   refs.echartRef!.current?.getEchartInstance()?.on('brushselected', (e) => {
-    
     currentSelection = e as object;
   });
 
-  refs.echartRef!.current?.getEchartInstance()?.on('brush', (e) => {
-  });
+  // refs.echartRef!.current?.getEchartInstance()?.on('brush', (e) => {
+  //   console.log('brush', e);
+  // });
 
   refs.echartRef!.current?.getEchartInstance()?.on('brushEnd', (e) => {
-    console.log('brushEnd', e);
-
     console.log('currentSelection', currentSelection);
+
+    console.log('echartOptions', echartOptions);
 
     console.log('formData', formData);
   });

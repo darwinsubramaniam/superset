@@ -62,6 +62,7 @@ function Echart(
     getEchartInstance: () => chartRef.current,
   }));
 
+  // will be triggered when window being resized
   useEffect(() => {
     if (!divRef.current) return;
     if (!chartRef.current) {
@@ -79,6 +80,7 @@ function Echart(
     });
 
     chartRef.current.setOption(echartOptions, true);
+    console.log('chartRef.current', echartOptions);
   }, [echartOptions, eventHandlers, zrEventHandlers]);
 
   // highlighting
