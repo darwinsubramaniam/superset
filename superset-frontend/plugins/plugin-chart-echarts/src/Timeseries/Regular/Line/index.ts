@@ -35,14 +35,19 @@ import example1 from './images/Line1.png';
 import example2 from './images/Line2.png';
 import { EchartsChartPlugin } from '../../../types';
 
-const lineTransformProps = (chartProps: EchartsTimeseriesChartProps) =>
-  transformProps({
+const lineTransformProps = (chartProps: EchartsTimeseriesChartProps) => {
+
+  console.log('chartProps', chartProps);
+
+  return transformProps({
     ...chartProps,
     formData: {
       ...chartProps.formData,
       seriesType: EchartsTimeseriesSeriesType.Line,
     },
   });
+
+};
 
 export default class EchartsTimeseriesLineChartPlugin extends EchartsChartPlugin<
   EchartsTimeseriesFormData,

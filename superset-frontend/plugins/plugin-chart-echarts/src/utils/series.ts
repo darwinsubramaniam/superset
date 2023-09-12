@@ -490,7 +490,7 @@ export function getChartPadding(
 
 export function dedupSeries(series: SeriesOption[]): SeriesOption[] {
   const counter = new Map<string, number>();
-  return series.map(row => {
+  const seriesOpts = series.map(row => {
     let { id } = row;
     if (id === undefined) return row;
     id = String(id);
@@ -502,6 +502,7 @@ export function dedupSeries(series: SeriesOption[]): SeriesOption[] {
       id: `${id}${suffix}`,
     };
   });
+  return seriesOpts;
 }
 
 export function sanitizeHtml(text: string): string {
