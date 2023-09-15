@@ -1,28 +1,22 @@
 
 
-type PluginOptions = {
+//  This is just part of the explain options, is not fullfleged 
+//  this focus on the histogram use case with one dimension and one metric
+type ExplainOptions = {
     data: {
-        datasetName: string;
-        globalFilter: {
-            $and: any[];
-        };
+        dataset_id: number;
     };
     targetFilter: OrFilter;
 };
 
 type OrFilter = {
-    $or: [{
+    OR: [{
         [key: string]: {
-            $gte: number;
-            $lt: number;
+            gte: number;
+            lt: number;
         }
     }];
 }
-
-export type Plugin = {
-    pluginName: string;
-    pluginOptions: PluginOptions;
-};
 
 
 export interface BrushSelectedDataIndex {
@@ -42,8 +36,8 @@ export class Explainer {
     public execute(
         selectedDataIndex:BrushSelectedDataIndex[],
         allSeries: Series[],
-        x_axis:string,
-        datasource_id: number): Plugin | undefined {
+        xAxis:string,
+        datasetId: number): ExplainOptions | undefined {
 
         const selectedDatas = allSeries.map(series => {
             const selectedDataIndexForGivenSeriesName  = selectedDataIndex
@@ -62,7 +56,7 @@ export class Explainer {
                 const min = Math.min(...x.map(arr => arr[0]));
                 const max = Math.max(...x.map(arr => arr[0]))
                 return [{
-                        name: x_axis,
+                        name: xAxis,
                         $gte: min,
                         $lt: max
                     
@@ -74,25 +68,19 @@ export class Explainer {
 
         // Return a Plugin object with the selected data
         return {
-            pluginName: 'explain',
-            pluginOptions: {
                 data: {
-                    datasetName: 'selectedData',
-                    globalFilter: {
-                        $and: [],
-                    },
+                    dataset_id: datasetId
                 },
                 targetFilter: {
-                    $or: [
+                    OR: [
                         {
                             [targetFilter[0].name]: {
-                                $gte: targetFilter[0].$gte,
-                                $lt: targetFilter[0].$lt,
+                                gte: targetFilter[0].$gte,
+                                lt: targetFilter[0].$lt,
                             }
                         }
                     ]
                 }
-            },
-        };
+            };
     }
 }

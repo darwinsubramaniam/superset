@@ -1,11 +1,15 @@
-from flask import Response
-from superset.views.base_api import BaseSupersetModelRestApi
+from flask import Response, request
+from jsonschema import ValidationError
+from superset.views.base_api import BaseSupersetModelRestApi, requires_json
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from superset.models.slice import Slice
 from flask_appbuilder.api import expose
+from superset.analyse.schemas import AnalysisPostSchema
 
 class AnalysesRestApi(BaseSupersetModelRestApi):
     datamodel = SQLAInterface(Slice)
+
+    add_model_schema = AnalysisPostSchema()
 
     resource_name = "analysis"
     
@@ -13,6 +17,7 @@ class AnalysesRestApi(BaseSupersetModelRestApi):
     openapi_spec_tag = "Analysis"
 
     @expose("/", methods=["POST"])
+    @requires_json
     def post(self) -> Response:
         """Create a new analysis.
         ---
@@ -48,6 +53,25 @@ class AnalysesRestApi(BaseSupersetModelRestApi):
             500:
               $ref: '#/components/responses/500'
         """
-        return self.response(200, message="POST OK")
+
+        try:
+            item = self.add_model_schema.load(request.json)
+        except ValidationError as error:
+            return self.response_400(message=error.message)
+        
+        target_filter = item.get('targetFilter', [])
+
+        or_filter = target_filter.get('OR', {})
+
+        for key, value in or_filter.items():
+            xAxis = key
+            gte = value.get('gte', 0)
+            lt = value.get('lt', 0)
+            print("xAxis: ", xAxis)
+            print("gte: ", gte)
+            print("lt: ", lt)
+        
+
+        return self.response(200, message=item)
 
 

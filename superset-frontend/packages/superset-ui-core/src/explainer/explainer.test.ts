@@ -11,7 +11,7 @@ describe("Explain" , () => {
 
     it('historgram single category', () => {
         const mockXAxis = "sepal_length";
-        const mockDatasourceId = 1;
+        const mockDatasetId = 1;
         const mockSelectedDataIndex: BrushSelectedDataIndex[] = [
             {
                 name: "COUNT(*)",
@@ -169,7 +169,7 @@ describe("Explain" , () => {
 
         
 
-        const result = explainer.execute(mockSelectedDataIndex, mockAllSeries, mockXAxis, mockDatasourceId);
+        const result = explainer.execute(mockSelectedDataIndex, mockAllSeries, mockXAxis, mockDatasetId);
         console.log(JSON.stringify(result, null, 2));
         
     })
