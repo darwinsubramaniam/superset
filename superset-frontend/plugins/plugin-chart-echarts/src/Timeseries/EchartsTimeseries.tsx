@@ -271,6 +271,14 @@ export default function EchartsTimeseries({
 
     console.log('echartOptions', echartOptions);
 
+    console.log('datasource_id', formData.datasource.split('__')[0]);
+
+    console.log('x-axis', formData.xAxis);
+
+    console.log('groupby', formData.groupby);
+
+    console.log('metric = yAxis', formData.metrics[0]);
+
     console.log('formData', formData);
   });
 
