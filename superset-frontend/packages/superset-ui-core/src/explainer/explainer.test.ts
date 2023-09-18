@@ -169,7 +169,7 @@ describe("Explain" , () => {
 
         
 
-        const result = explainer.execute(mockSelectedDataIndex, mockAllSeries, mockXAxis, mockDatasetId);
+        const result = explainer.payload(mockSelectedDataIndex, mockAllSeries, mockXAxis, mockDatasetId);
         console.log(JSON.stringify(result, null, 2));
         
     })

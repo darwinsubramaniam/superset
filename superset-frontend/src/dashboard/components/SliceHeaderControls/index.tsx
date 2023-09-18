@@ -58,6 +58,8 @@ import { DrillDetailMenuItems } from 'src/components/Chart/DrillDetail';
 import { LOG_ACTIONS_CHART_DOWNLOAD_AS_IMAGE } from 'src/logger/LogUtils';
 import { RootState } from 'src/dashboard/types';
 import { useCrossFiltersScopingModal } from '../nativeFilters/FilterBar/CrossFilters/ScopingModal/useCrossFiltersScopingModal';
+import { Explainer, ExplainerData } from 'packages/superset-ui-core/src/explainer/explainer';
+
 
 const MENU_KEYS = {
   DOWNLOAD_AS_IMAGE: 'download_as_image',
@@ -73,6 +75,7 @@ const MENU_KEYS = {
   VIEW_RESULTS: 'view_results',
   DRILL_TO_DETAIL: 'drill_to_detail',
   CROSS_FILTER_SCOPING: 'cross_filter_scoping',
+  KEYSIGHT_ANALYTICS: 'view_keysight_analytics'
 };
 
 // TODO: replace 3 dots with an icon
@@ -156,6 +159,11 @@ export interface SliceHeaderControlsProps {
   supersetCanExplore?: boolean;
   supersetCanShare?: boolean;
   supersetCanCSV?: boolean;
+
+  // Keysight - Explain analysis
+  analysis?: {
+    canExplain?: boolean;
+  }
 
   crossFiltersEnabled?: boolean;
 }
@@ -329,6 +337,35 @@ const SliceHeaderControls = (props: SliceHeaderControlsPropsWithRouter) => {
         openScopingModal();
         break;
       }
+      case MENU_KEYS.KEYSIGHT_ANALYTICS: {
+        //openAnalysisModel();
+        console.group('Activating Keysight Explainer')
+        console.log("Chart ID : " + JSON.stringify(props.slice.slice_id))
+        console.log("datasource_id : " + JSON.stringify(props.slice.datasource.split('__')[0]))
+        const selection = localStorage.getItem(`currentSelection-${props.slice.slice_id}`);
+        console.log("Selection : " + JSON.stringify(selection))
+        const series = localStorage.getItem(`echartOptions-${props.slice.slice_id}`);
+        console.log('series', series)
+
+        let explainerData = localStorage.getItem(`explainer-${props.slice.slice_id}`);
+
+        if(explainerData){
+          
+          console.group("Calling API Preparation")
+          let a:ExplainerData = JSON.parse(explainerData)
+          let body = Explainer.getPayload(a)
+          console.log(body);
+
+          Explainer.execute(body).then((r) => {
+              console.log("API Response : " + JSON.stringify(r))
+          }).catch((e) => {
+              console.log("API Error : " + JSON.stringify(e))
+          })
+
+        }
+
+        break;
+      }
       default:
         break;
     }
@@ -341,8 +378,8 @@ const SliceHeaderControls = (props: SliceHeaderControlsPropsWithRouter) => {
     isFullSize,
     cachedDttm = [],
     updatedDttm = null,
-    addSuccessToast = () => {},
-    addDangerToast = () => {},
+    addSuccessToast = () => { },
+    addDangerToast = () => { },
     supersetCanShare = false,
     isCached = [],
   } = props;
@@ -465,6 +502,22 @@ const SliceHeaderControls = (props: SliceHeaderControlsPropsWithRouter) => {
             formData={props.formData}
           />
         )}
+
+      <Menu.Divider />
+      <Menu.Item
+        key={MENU_KEYS.KEYSIGHT_ANALYTICS}
+        disabled={props.chartStatus === 'loading'}
+        style={{ height: 'auto', lineHeight: 'initial' }}
+        data-test="refresh-chart-menu-item"
+      >
+
+        <Tooltip title={"Open Keysight Explainer"}>
+          {t('Explainer')}
+        </Tooltip>
+
+      </Menu.Item>
+
+
 
       {(slice.description || props.supersetCanExplore) && <Menu.Divider />}
 

@@ -295,6 +295,8 @@ export const ScopingModal = ({
       ?.scope as NativeFilterScope;
   }, [chartConfigs, currentChartId, globalChartConfig.scope]);
 
+  console.log("Scoping Model Open for : " + JSON.stringify(initialChartConfig) + "for Chart ID: " + initialChartId)
+
   return (
     <Modal
       onHide={closeModal}

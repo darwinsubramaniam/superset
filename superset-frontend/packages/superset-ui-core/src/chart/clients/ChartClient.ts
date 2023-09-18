@@ -58,7 +58,7 @@ export default class ChartClient {
   constructor(
     config: {
       client?: SupersetClientInterface | SupersetClientClass;
-    } = {},
+    } = {}
   ) {
     const { client = SupersetClient } = config;
     this.client = client;
@@ -70,6 +70,7 @@ export default class ChartClient {
   ): Promise<QueryFormData> {
     /* If sliceId is provided, use it to fetch stored formData from API */
     if ('sliceId' in input) {
+      console.log('loadFormData' + input)
       const promise = this.client
         .get({
           endpoint: `/api/v1/form_data/?slice_id=${input.sliceId}`,
@@ -102,6 +103,7 @@ export default class ChartClient {
     const { viz_type: visType } = formData;
     const metaDataRegistry = getChartMetadataRegistry();
     const buildQueryRegistry = getChartBuildQueryRegistry();
+
 
     if (metaDataRegistry.has(visType)) {
       const { useLegacyApi } = metaDataRegistry.get(visType)!;
