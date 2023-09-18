@@ -12,8 +12,8 @@ class FilterItemSchema(Schema):
     """
     Schema to represent an item in the filter array
     """
-    gte = fields.Integer(required=True)
-    lt = fields.Integer(required=True)
+    gte = fields.Number(required=True)
+    lt = fields.Number(required=True)
 
 
 class ORFilterSchema(Schema):

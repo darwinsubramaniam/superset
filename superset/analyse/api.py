@@ -5,6 +5,7 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from superset.models.slice import Slice
 from flask_appbuilder.api import expose
 from superset.analyse.schemas import AnalysisPostSchema
+from superset.daos.dataset import DatasetDAO;
 
 class AnalysesRestApi(BaseSupersetModelRestApi):
     datamodel = SQLAInterface(Slice)
@@ -59,19 +60,31 @@ class AnalysesRestApi(BaseSupersetModelRestApi):
         except ValidationError as error:
             return self.response_400(message=error.message)
         
-        target_filter = item.get('targetFilter', [])
+        dataset_id = item.get('data',{}).get('dataset_id');
+
+        dataset_name = DatasetDAO.find_by_id(dataset_id)
+        print("Dataset : " , dataset_name)
+        
+        target_filter = item.get('targetFilter', {})
 
         or_filter = target_filter.get('OR', {})
 
+
+        sections = []
+
         for key, value in or_filter.items():
             xAxis = key
-            gte = value.get('gte', 0)
-            lt = value.get('lt', 0)
+            gte = value.get('gte')
+            lt = value.get('lt')
             print("xAxis: ", xAxis)
             print("gte: ", gte)
             print("lt: ", lt)
-        
+            sections.append({"xAxis":xAxis, "gt" :gte, "lt":lt, "dataset_name":dataset_name.to_json().get("table_name")})
 
-        return self.response(200, message=item)
+       
+        # let deal with only histogram first by having the or filter Item to be one 
+        print(sections[0])
+
+        return self.response(200, message=sections)
 
 
