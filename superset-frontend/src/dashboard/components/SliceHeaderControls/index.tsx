@@ -59,6 +59,7 @@ import { LOG_ACTIONS_CHART_DOWNLOAD_AS_IMAGE } from 'src/logger/LogUtils';
 import { RootState } from 'src/dashboard/types';
 import { useCrossFiltersScopingModal } from '../nativeFilters/FilterBar/CrossFilters/ScopingModal/useCrossFiltersScopingModal';
 import { Explainer, ExplainerData } from 'packages/superset-ui-core/src/explainer/explainer';
+import { useExplainerModal } from '../explainer/useExplainerModal';
 
 
 const MENU_KEYS = {
@@ -259,6 +260,8 @@ const SliceHeaderControls = (props: SliceHeaderControlsPropsWithRouter) => {
     props.slice.slice_id,
   );
 
+  const [openExplainerModal, explainerModal] = useExplainerModal(props.slice.slice_id);
+
   const canEditCrossFilters =
     useSelector<RootState, boolean>(
       ({ dashboardInfo }) => dashboardInfo.dash_edit_perm,
@@ -346,24 +349,7 @@ const SliceHeaderControls = (props: SliceHeaderControlsPropsWithRouter) => {
         console.log("Selection : " + JSON.stringify(selection))
         const series = localStorage.getItem(`echartOptions-${props.slice.slice_id}`);
         console.log('series', series)
-
-        let explainerData = localStorage.getItem(`explainer-${props.slice.slice_id}`);
-
-        if(explainerData){
-          
-          console.group("Calling API Preparation")
-          let a:ExplainerData = JSON.parse(explainerData)
-          let body = Explainer.getPayload(a)
-          console.log(body);
-
-          Explainer.execute(body).then((r) => {
-              console.log("API Response : " + JSON.stringify(r))
-          }).catch((e) => {
-              console.log("API Error : " + JSON.stringify(e))
-          })
-
-        }
-
+        openExplainerModal();
         break;
       }
       default:
@@ -610,6 +596,7 @@ const SliceHeaderControls = (props: SliceHeaderControlsPropsWithRouter) => {
         </span>
       </NoAnimationDropdown>
       {canEditCrossFilters && scopingModal}
+      {explainerModal}
     </>
   );
 };

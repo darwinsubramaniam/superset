@@ -37,8 +37,6 @@ import { EchartsChartPlugin } from '../../../types';
 
 const lineTransformProps = (chartProps: EchartsTimeseriesChartProps) => {
 
-  console.log('chartProps', chartProps);
-
   return transformProps({
     ...chartProps,
     formData: {
