@@ -6,6 +6,7 @@ from superset.models.slice import Slice
 from flask_appbuilder.api import expose
 from superset.analyse.schemas import AnalysisPostSchema
 from superset.daos.dataset import DatasetDAO;
+import requests;
 
 class AnalysesRestApi(BaseSupersetModelRestApi):
     datamodel = SQLAInterface(Slice)
@@ -78,13 +79,54 @@ class AnalysesRestApi(BaseSupersetModelRestApi):
             lt = value.get('lt')
             print("xAxis: ", xAxis)
             print("gte: ", gte)
-            print("lt: ", lt)
-            sections.append({"xAxis":xAxis, "gt" :gte, "lt":lt, "dataset_name":dataset_name.to_json().get("table_name")})
+            print("lte: ", lt)
+            sections.append({"xAxis":xAxis, "gte" :gte, "lte":lt, "dataset_name":dataset_name.to_json().get("table_name")})
 
        
         # let deal with only histogram first by having the or filter Item to be one 
         print(sections[0])
 
-        return self.response(200, message=sections)
+        explainer_flask_url = "http://ec2-3-138-155-43.us-east-2.compute.amazonaws.com:8081/query"
+
+        headers = {
+      "Cache-Control": "no-cache",
+      "Accept": "*/*",
+      "User-Agent": "Fetch Client",
+      "Accept-Encoding": "gzip, deflate",
+      "Connection": "keep-alive",
+      "Content-Type": "application/json"
+      }
+
+        payload = {
+            "pluginOptions": {
+                "data": {
+                    "datasetName": sections[0]["dataset_name"]
+                },
+                "targetFilter": {
+                    "$or": [
+                        {
+                            sections[0]['xAxis']: {
+                                "$gte": sections[0]["gte"],
+                                "$lte": sections[0]["lte"]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+
+        # response = requests.post(explainer_flask_url, json=payload,headers=headers)
+        # # Check the response
+        # if response.status_code != 200:
+        #     print('POST /query status: ', response.status_code)
+        #     print("response body ", response.text )
+        # else:
+        #     print('Success!')
+
+        
+        
+
+        # return self.response(200, message=response.text)
+        return self.response(200, message=payload)
 
 
