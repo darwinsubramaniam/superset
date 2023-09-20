@@ -1,11 +1,9 @@
-import { BrushSelectedDataIndex, Explainer, Series } from "./explainer"
+import { BrushSelectedDataIndex, Explainer, ExplainerData, Series, getPayload } from "./explainer"
 
 
 describe("Explain" , () => {
-    let explainer:Explainer
 
     beforeEach(() => {
-        explainer = new Explainer()
     })
 
 
@@ -169,7 +167,12 @@ describe("Explain" , () => {
 
         
 
-        const result = explainer.payload(mockSelectedDataIndex, mockAllSeries, mockXAxis, mockDatasetId);
+        const result = Explainer.getPayload({
+            allSeries:mockAllSeries,
+            brushSelectedDataIndex:mockSelectedDataIndex,
+            datasetId:mockDatasetId,
+            xAxis:mockXAxis
+        });
         console.log(JSON.stringify(result, null, 2));
         
     })

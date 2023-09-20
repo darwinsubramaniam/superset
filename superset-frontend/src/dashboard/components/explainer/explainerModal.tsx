@@ -4,6 +4,8 @@ import { useCallback, useState } from 'react';
 import Modal from 'src/components/Modal';
 import IconButton from '../IconButton';
 import Icons from 'src/components/Icons';
+import { ExplainerSelection } from './explainerSelection';
+import { ExplainerResult, ExplainerResultModal } from './explainerResult';
 
 export interface ExplainerModalProps {
     initialChartId: number | undefined;
@@ -17,7 +19,7 @@ export const ExplainerModal = ({
     closeModal
 }: ExplainerModalProps) => {
 
-    const [resultExplainer, setResultExplainer] = useState<string>();
+    const [resultExplainer, setResultExplainer] = useState<ExplainerResult[]>();
 
 
     const rawExplainerData = localStorage.getItem(`explainer-${initialChartId}`);
@@ -31,11 +33,10 @@ export const ExplainerModal = ({
             console.group("Calling API Preparation")
 
             Explainer.execute(payload).then((r) => {
-                console.log("API Result : " + JSON.stringify(r))
-                setResultExplainer(JSON.stringify(r, null, 2))
+                console.log("API Result : " + JSON.stringify(r.json.message))
+                setResultExplainer(JSON.parse(r.json.message))
             }).catch((e) => {
                 console.log("API Error : " + JSON.stringify(e))
-                setResultExplainer(JSON.stringify(e, null, 2))
             })
 
         }
@@ -64,7 +65,7 @@ export const ExplainerModal = ({
                 height: 700
             }}
         >
-            <div style={{padding:10}}>
+            <div style={{ padding: 10 }}>
 
                 <h2>{t(`Overview : Chart ID ${initialChartId}`)}</h2>
                 <p>
@@ -78,15 +79,22 @@ export const ExplainerModal = ({
                 <br />
 
                 <h2>Current Selection</h2>
-                <div>{t(`Explainer Playload : ${JSON.stringify(payload, null, 2)}`)}</div>
+                { payload?.targetFilter.OR ? <ExplainerSelection
+                    data={payload.data} targetFilter={payload.targetFilter}></ExplainerSelection> : <p>No Data Selected</p>}
 
                 <br />
 
                 <h2>Explanations</h2>
 
-                <div>{t(`Explainer Result : ${JSON.stringify(resultExplainer, null, 2)}`)}</div>
+                {/* <div>{t(`Explainer Result : ${JSON.stringify(resultExplainer, null, 2)}`)}</div> */}
 
+                {
+                    resultExplainer? <ExplainerResultModal results={resultExplainer}></ExplainerResultModal> : <p>No Result</p>
+                }
 
+                <br />
+
+                
                 <IconButton
                     onClick={callDownloadExplainer}
                     icon={<Icons.CloudDownloadOutlined iconSize="xl" />}
