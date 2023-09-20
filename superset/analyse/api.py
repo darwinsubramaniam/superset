@@ -61,7 +61,7 @@ class AnalysesRestApi(BaseSupersetModelRestApi):
         except ValidationError as error:
             return self.response_400(message=error.message)
         
-        dataset_id = item.get('data',{}).get('dataset_id');
+        dataset_id = item.get('data',{}).get('dataset_id')
 
         dataset_name = DatasetDAO.find_by_id(dataset_id)
         print("Dataset : " , dataset_name)
@@ -76,18 +76,18 @@ class AnalysesRestApi(BaseSupersetModelRestApi):
         for key, value in or_filter.items():
             xAxis = key
             gte = value.get('gte')
-            lt = value.get('lt')
+            lte = value.get('lte')
             print("xAxis: ", xAxis)
             print("gte: ", gte)
-            print("lte: ", lt)
-            sections.append({"xAxis":xAxis, "gte" :gte, "lte":lt, "dataset_name":dataset_name.to_json().get("table_name")})
+            print("lte: ", lte)
+            sections.append({"xAxis":xAxis, "gte" :gte, "lte":lte, "dataset_name":dataset_name.to_json().get("table_name")})
 
        
         # let deal with only histogram first by having the or filter Item to be one 
         print(sections[0])
 
-        explainer_flask_url = "http://ec2-3-138-155-43.us-east-2.compute.amazonaws.com:8081/query"
-
+        #explainer_flask_url = "http://ec2-3-138-155-43.us-east-2.compute.amazonaws.com:8081/query"
+        explainer_flask_url = "http://ec2-3-15-161-222.us-east-2.compute.amazonaws.com:8081/query"
         headers = {
       "Cache-Control": "no-cache",
       "Accept": "*/*",
@@ -115,18 +115,18 @@ class AnalysesRestApi(BaseSupersetModelRestApi):
             }
         }
 
-        # response = requests.post(explainer_flask_url, json=payload,headers=headers)
-        # # Check the response
-        # if response.status_code != 200:
-        #     print('POST /query status: ', response.status_code)
-        #     print("response body ", response.text )
-        # else:
-        #     print('Success!')
+        response = requests.post(explainer_flask_url, json=payload,headers=headers)
+        # Check the response
+        if response.status_code != 200:
+            print('POST /query status: ', response.status_code)
+            print("response body ", response.text )
+        else:
+            print('Success!')
 
         
         
 
-        # return self.response(200, message=response.text)
-        return self.response(200, message=payload)
+        return self.response(200, message=response.text)
+        # return self.response(200, message=response)
 
 

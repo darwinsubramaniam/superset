@@ -13,7 +13,7 @@ class FilterItemSchema(Schema):
     Schema to represent an item in the filter array
     """
     gte = fields.Number(required=True)
-    lt = fields.Number(required=True)
+    lte = fields.Number(required=True)
 
 
 class ORFilterSchema(Schema):
