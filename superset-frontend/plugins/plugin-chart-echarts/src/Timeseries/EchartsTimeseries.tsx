@@ -29,13 +29,16 @@ import {
 import { ViewRootGroup } from 'echarts/types/src/util/types';
 import GlobalModel from 'echarts/types/src/model/Global';
 import ComponentModel from 'echarts/types/src/model/Component';
+import {
+  BrushSelectedDataIndex,
+  Series,
+  ExplainerData,
+} from 'packages/superset-ui-core/src/explainer/explainer';
 import { EchartsHandler, EventHandlers } from '../types';
 import Echart from '../components/Echart';
 import { TimeseriesChartTransformedProps } from './types';
 import { formatSeriesName } from '../utils/series';
 import { ExtraControls } from '../components/ExtraControls';
-import { BrushSelectedDataIndex, Series , ExplainerData } from 'packages/superset-ui-core/src/explainer/explainer';
-
 
 const TIMER_DURATION = 300;
 
@@ -66,12 +69,11 @@ export default function EchartsTimeseries({
   const clickTimer = useRef<ReturnType<typeof setTimeout>>();
   const extraControlRef = useRef<HTMLDivElement>(null);
   const [extraControlHeight, setExtraControlHeight] = useState(0);
-  
+
   useEffect(() => {
     const updatedHeight = extraControlRef.current?.offsetHeight || 0;
     setExtraControlHeight(updatedHeight);
   }, [formData.showExtraControls]);
-
 
   const getModelInfo = (target: ViewRootGroup, globalModel: GlobalModel) => {
     let el = target;
@@ -181,7 +183,7 @@ export default function EchartsTimeseries({
           ...(eventParams.name ? [eventParams.name] : []),
           ...(labelMap[seriesName] ?? []),
         ];
-        /**Adding for debugging */
+        /** Adding for debugging */
         console.info('contextmenu + values', values);
         if (data && xAxis.type === AxisType.time) {
           drillToDetailFilters.push({
@@ -259,9 +261,9 @@ export default function EchartsTimeseries({
     },
   };
 
-  let currentSelection:object={};
+  let currentSelection: object = {};
 
-  refs.echartRef!.current?.getEchartInstance()?.on('brushselected', (e) => {
+  refs.echartRef!.current?.getEchartInstance()?.on('brushselected', e => {
     currentSelection = e as object;
   });
 
@@ -269,9 +271,9 @@ export default function EchartsTimeseries({
   //   console.log('brush', e);
   // });
 
-  refs.echartRef!.current?.getEchartInstance()?.on('brushEnd', (e) => {
-    const datasetId = formData.datasource.split('__')[0]
-    console.group("Selection Data")
+  refs.echartRef!.current?.getEchartInstance()?.on('brushEnd', e => {
+    const datasetId = formData.datasource.split('__')[0];
+    console.group('Selection Data');
     console.log('currentSelection', currentSelection);
 
     console.log('echartOptions', echartOptions);
@@ -288,47 +290,51 @@ export default function EchartsTimeseries({
 
     console.groupEnd();
 
-    const sliceId = formData.sliceId;
+    const { sliceId } = formData;
 
-    localStorage.setItem(`currentSelection-${sliceId}`, JSON.stringify(currentSelection));
-    localStorage.setItem(`echartOptions-${sliceId}`, JSON.stringify(echartOptions));
-    localStorage.setItem(`explainer-${sliceId}`,'')
+    localStorage.setItem(
+      `currentSelection-${sliceId}`,
+      JSON.stringify(currentSelection),
+    );
+    localStorage.setItem(
+      `echartOptions-${sliceId}`,
+      JSON.stringify(echartOptions),
+    );
+    localStorage.setItem(`explainer-${sliceId}`, '');
 
-    const selectedDataIndex:BrushSelectedDataIndex = {
-      dataIndex:currentSelection['batch'][0]['selected'][0]['dataIndex'],
-      name:currentSelection['batch'][0]['selected'][0]['seriesName']
-    }
-    const sIdxs:BrushSelectedDataIndex[] = [];
+    const selectedDataIndex: BrushSelectedDataIndex = {
+      dataIndex: (currentSelection as any).batch[0].selected[0].dataIndex,
+      name: (currentSelection as any).batch[0].selected[0].seriesName,
+    };
+    const sIdxs: BrushSelectedDataIndex[] = [];
     sIdxs.push(selectedDataIndex);
 
-    const allSeries:Series = {
-      name: (echartOptions as object)['series'][0]['name'],
-      data: (echartOptions as object)['series'][0]['data'],
-    }
-    const aSIdx:Series[] = [];
+    const allSeries: Series = {
+      name: (echartOptions as any).series[0].name,
+      data: (echartOptions as any).series[0].data,
+    };
+    const aSIdx: Series[] = [];
     aSIdx.push(allSeries);
 
-    const explainerData:ExplainerData = {
-      brushSelectedDataIndex:sIdxs,
-      allSeries:aSIdx,
-      datasetId:Number(datasetId),
-      xAxis:formData.xAxis
-    }
+    const explainerData: ExplainerData = {
+      brushSelectedDataIndex: sIdxs,
+      allSeries: aSIdx,
+      datasetId: Number(datasetId),
+      xAxis: formData.xAxis,
+    };
 
-    console.group('Brush Data Connected')
+    console.group('Brush Data Connected');
 
     console.log('selectedDataIndex', selectedDataIndex);
 
-    console.log('allSeries', allSeries)
+    console.log('allSeries', allSeries);
 
-    console.log('explainerData', explainerData)
+    console.log('explainerData', explainerData);
 
-    localStorage.setItem(`explainer-${sliceId}`, JSON.stringify(explainerData))
+    localStorage.setItem(`explainer-${sliceId}`, JSON.stringify(explainerData));
 
     console.groupEnd();
-
   });
-
 
   return (
     <>

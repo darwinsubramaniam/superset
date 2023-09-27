@@ -58,9 +58,7 @@ import { DrillDetailMenuItems } from 'src/components/Chart/DrillDetail';
 import { LOG_ACTIONS_CHART_DOWNLOAD_AS_IMAGE } from 'src/logger/LogUtils';
 import { RootState } from 'src/dashboard/types';
 import { useCrossFiltersScopingModal } from '../nativeFilters/FilterBar/CrossFilters/ScopingModal/useCrossFiltersScopingModal';
-import { Explainer, ExplainerData } from 'packages/superset-ui-core/src/explainer/explainer';
 import { useExplainerModal } from '../explainer/useExplainerModal';
-
 
 const MENU_KEYS = {
   DOWNLOAD_AS_IMAGE: 'download_as_image',
@@ -76,7 +74,7 @@ const MENU_KEYS = {
   VIEW_RESULTS: 'view_results',
   DRILL_TO_DETAIL: 'drill_to_detail',
   CROSS_FILTER_SCOPING: 'cross_filter_scoping',
-  KEYSIGHT_ANALYTICS: 'view_keysight_analytics'
+  KEYSIGHT_ANALYTICS: 'view_keysight_analytics',
 };
 
 // TODO: replace 3 dots with an icon
@@ -164,7 +162,7 @@ export interface SliceHeaderControlsProps {
   // Keysight - Explain analysis
   analysis?: {
     canExplain?: boolean;
-  }
+  };
 
   crossFiltersEnabled?: boolean;
 }
@@ -260,7 +258,9 @@ const SliceHeaderControls = (props: SliceHeaderControlsPropsWithRouter) => {
     props.slice.slice_id,
   );
 
-  const [openExplainerModal, explainerModal] = useExplainerModal(props.slice.slice_id);
+  const [openExplainerModal, explainerModal] = useExplainerModal(
+    props.slice.slice_id,
+  );
 
   const canEditCrossFilters =
     useSelector<RootState, boolean>(
@@ -341,14 +341,22 @@ const SliceHeaderControls = (props: SliceHeaderControlsPropsWithRouter) => {
         break;
       }
       case MENU_KEYS.KEYSIGHT_ANALYTICS: {
-        //openAnalysisModel();
-        console.group('Activating Keysight Explainer')
-        console.log("Chart ID : " + JSON.stringify(props.slice.slice_id))
-        console.log("datasource_id : " + JSON.stringify(props.slice.datasource.split('__')[0]))
-        const selection = localStorage.getItem(`currentSelection-${props.slice.slice_id}`);
-        console.log("Selection : " + JSON.stringify(selection))
-        const series = localStorage.getItem(`echartOptions-${props.slice.slice_id}`);
-        console.log('series', series)
+        // openAnalysisModel();
+        console.group('Activating Keysight Explainer');
+        console.log(`Chart ID : ${JSON.stringify(props.slice.slice_id)}`);
+        console.log(
+          `datasource_id : ${JSON.stringify(
+            props.slice.datasource.split('__')[0],
+          )}`,
+        );
+        const selection = localStorage.getItem(
+          `currentSelection-${props.slice.slice_id}`,
+        );
+        console.log(`Selection : ${JSON.stringify(selection)}`);
+        const series = localStorage.getItem(
+          `echartOptions-${props.slice.slice_id}`,
+        );
+        console.log('series', series);
         openExplainerModal();
         break;
       }
@@ -364,8 +372,8 @@ const SliceHeaderControls = (props: SliceHeaderControlsPropsWithRouter) => {
     isFullSize,
     cachedDttm = [],
     updatedDttm = null,
-    addSuccessToast = () => { },
-    addDangerToast = () => { },
+    addSuccessToast = () => {},
+    addDangerToast = () => {},
     supersetCanShare = false,
     isCached = [],
   } = props;
@@ -496,14 +504,8 @@ const SliceHeaderControls = (props: SliceHeaderControlsPropsWithRouter) => {
         style={{ height: 'auto', lineHeight: 'initial' }}
         data-test="refresh-chart-menu-item"
       >
-
-        <Tooltip title={"Open Keysight Explainer"}>
-          {t('Explainer')}
-        </Tooltip>
-
+        <Tooltip title="Open Keysight Explainer">{t('Explainer')}</Tooltip>
       </Menu.Item>
-
-
 
       {(slice.description || props.supersetCanExplore) && <Menu.Divider />}
 

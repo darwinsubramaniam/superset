@@ -272,9 +272,7 @@ const ChartContextMenu = (
 
   menuItems.push(
     <>
-      <Menu.Item>
-        Darwin
-      </Menu.Item>
+      <Menu.Item>Darwin</Menu.Item>
       {itemsCount > 1 && <Menu.Divider />}
     </>,
   );
